@@ -1,0 +1,110 @@
+{
+  "info": {
+    "_postman_id": "b3eaf355-a477-45fd-8e99-3e4212468f46",
+    "name": "jsondummy",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58920651",
+    "_collection_link": "https://go.postman.co/collection/58920651-b3eaf355-a477-45fd-8e99-3e4212468f46?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.collectionVariables.set('accessToken', response.accessToken);\r\npm.collectionVariables.set('refreshToken', response.refreshToken);\r\n\r\nconsole.log('accessToken saved:', pm.collectionVariables.get('accessToken'));\r\nconsole.log('refreshToken saved:', pm.collectionVariables.get('refreshToken'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"Timofey\",\r\n    \"password\": \"Timofeypass\",\r\n    \"expiresInMins\": 30\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dummyjson.com/auth/login",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Refresh",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\nif (pm.response.code === 200 && response.accessToken) {\r\n    const oldAccessToken = pm.collectionVariables.get('accessToken');\r\n\r\n    pm.collectionVariables.set('accessToken', response.accessToken);\r\n    pm.collectionVariables.set('refreshToken', response.refreshToken);\r\n\r\n    console.log('old accessToken:', oldAccessToken);\r\n    console.log('new accessToken:', pm.collectionVariables.get('accessToken'));\r\n} else {\r\n    console.error('Refresh failed:', pm.response.code, response.message);\r\n}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"refreshToken\": \"{{refreshToken}}\",\r\n    \"expiresInMins\": 30\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dummyjson.com/auth/refresh",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "refresh"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    }
+  ]
+}
